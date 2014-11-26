@@ -3929,6 +3929,7 @@ bool ACodec::LoadedState::onConfigureComponent(
 
     CHECK(mCodec->mNode != NULL);
 
+#ifndef QCOM_HARDWARE
     AString mime;
     CHECK(msg->findString("mime", &mime));
 
@@ -3941,6 +3942,13 @@ bool ACodec::LoadedState::onConfigureComponent(
         mCodec->signalError(OMX_ErrorUndefined, err);
         return false;
     }
+
+    {
+        sp<AMessage> notify = mCodec->mNotify->dup();
+        notify->setInt32("what", ACodec::kWhatComponentConfigured);
+        notify->post();
+    }
+#endif
 
     sp<RefBase> obj;
     if (msg->findObject("native-window", &obj)
@@ -3956,11 +3964,26 @@ bool ACodec::LoadedState::onConfigureComponent(
     }
     CHECK_EQ((status_t)OK, mCodec->initNativeWindow());
 
+#ifdef QCOM_HARDWARE
+    AString mime;
+    CHECK(msg->findString("mime", &mime));
+
+    status_t err = mCodec->configureCodec(mime.c_str(), msg);
+
+    if (err != OK) {
+        ALOGE("[%s] configureCodec returning error %d",
+              mCodec->mComponentName.c_str(), err);
+
+        mCodec->signalError(OMX_ErrorUndefined, err);
+        return false;
+    }
+
     {
         sp<AMessage> notify = mCodec->mNotify->dup();
         notify->setInt32("what", ACodec::kWhatComponentConfigured);
         notify->post();
     }
+#endif
 
     return true;
 }
