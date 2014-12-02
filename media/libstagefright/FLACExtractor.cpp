@@ -570,6 +570,14 @@ status_t FLACParser::init()
             return NO_INIT;
         }
         // check sample rate
+#if defined(OMAP_ENHANCEMENT) || defined(OMAP_TUNA)
+        // With the Speex resampler, sample rates as high as 210kHz have been successful.
+        // Let's just limit it between that and 8kHz, let the user do what they want otherwise.
+        if (getSampleRate() > 210000 || getSampleRate() < 8000) {
+            ALOGE("unsupported sample rate %u", getSampleRate());
+            return NO_INIT;
+        }
+#else
         switch (getSampleRate()) {
         case  8000:
         case 11025:
@@ -582,14 +590,12 @@ status_t FLACParser::init()
         case 48000:
         case 88200:
         case 96000:
-#if defined(OMAP_ENHANCEMENT) || defined(OMAP_TUNA)
-	case 192000:
-#endif
             break;
         default:
             ALOGE("unsupported sample rate %u", getSampleRate());
             return NO_INIT;
         }
+#endif
         // configure the appropriate copy function, defaulting to trespass
         static const struct {
             unsigned mChannels;
