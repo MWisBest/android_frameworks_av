@@ -582,6 +582,9 @@ status_t FLACParser::init()
         case 48000:
         case 88200:
         case 96000:
+#if defined(OMAP_ENHANCEMENT) || defined(OMAP_TUNA)
+	case 192000:
+#endif
             break;
         default:
             ALOGE("unsupported sample rate %u", getSampleRate());
