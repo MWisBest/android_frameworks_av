@@ -45,12 +45,20 @@ public:
         DYN_LOW_QUALITY=5,
         DYN_MED_QUALITY=6,
         DYN_HIGH_QUALITY=7,
+#if defined(OMAP_ENHANCEMENT) || defined (OMAP_TUNA)
+        SPEEX_QUALITY=8,
+#endif
     };
 
     static const float UNITY_GAIN_FLOAT = 1.0f;
 
     static AudioResampler* create(audio_format_t format, int inChannelCount,
             int32_t sampleRate, src_quality quality=DEFAULT_QUALITY);
+
+#if defined(OMAP_ENHANCEMENT) || defined(OMAP_TUNA)
+    static int32_t checkRate(int32_t outRate, int32_t inRate);
+    virtual int32_t checkCRate(int32_t outRate, int32_t inRate) const;
+#endif
 
     virtual ~AudioResampler();
 

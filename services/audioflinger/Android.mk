@@ -101,6 +101,25 @@ LOCAL_SHARED_LIBRARIES := \
     libutils \
     liblog
 
+ifeq ($(OMAP_ENHANCEMENT), true)
+    OMAP_SPEEX_RESAMPLER := true
+else
+ifeq ($(OMAP_TUNA), true)
+    OMAP_SPEEX_RESAMPLER := true
+endif
+endif
+
+ifeq ($(OMAP_SPEEX_RESAMPLER), true)
+LOCAL_C_INCLUDES += \
+	external/speex/include
+
+LOCAL_SRC_FILES += \
+	AudioResamplerSpeex.cpp.arm
+
+LOCAL_SHARED_LIBRARIES += \
+	libspeexresampler
+endif
+
 LOCAL_MODULE:= test-resample
 
 LOCAL_MODULE_TAGS := optional
@@ -122,6 +141,20 @@ LOCAL_SHARED_LIBRARIES := \
     libcutils \
     libdl \
     liblog
+
+ifeq ($(OMAP_ENHANCEMENT), true)
+    OMAP_SPEEX_RESAMPLER := true
+else
+ifeq ($(OMAP_TUNA), true)
+    OMAP_SPEEX_RESAMPLER := true
+endif
+endif
+
+ifeq ($(OMAP_SPEEX_RESAMPLER), true)
+    LOCAL_SRC_FILES += AudioResamplerSpeex.cpp.arm
+    LOCAL_C_INCLUDES += external/speex/include
+    LOCAL_SHARED_LIBRARIES += libspeexresampler
+endif
 
 LOCAL_MODULE := libaudioresampler
 
