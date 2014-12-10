@@ -77,6 +77,13 @@ endif
 
 LOCAL_CFLAGS += -fvisibility=hidden
 
+# Some versions of GCC are tripping up and getting an ICE on AudioMixer::track__NoResample.
+# This only presents itself when using the -O3 compiler flag. The specific flag causing the
+# problem is -ftree-vectorize. So, unless we know our compiler isn't insane here, disable it.
+ifneq ($(DEBUG_COMPILER_IS_LESS_STUPID),true)
+	LOCAL_CFLAGS += -fno-tree-vectorize
+endif
+
 include $(BUILD_SHARED_LIBRARY)
 
 #

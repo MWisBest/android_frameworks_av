@@ -48,6 +48,15 @@ LOCAL_CFLAGS := -DOSCL_EXPORT_REF= -DOSCL_IMPORT_REF=
 
 LOCAL_CFLAGS += -Werror
 
+# Some versions of GCC are incorrectly throwing a strict-overflow error here.
+# This issue only manifests itself when using -O3.
+# So, unless we know our compiler isn't insane, force -O2 when -O3 is passed.
+ifneq ($(DEBUG_COMPILER_IS_LESS_STUPID),true)
+	ifneq ($(findstring -O3, $(TARGET_GLOBAL_CFLAGS)),)
+		LOCAL_CFLAGS += -O2
+	endif
+endif
+
 include $(BUILD_STATIC_LIBRARY)
 
 ################################################################################
