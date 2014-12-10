@@ -183,15 +183,19 @@ class StagefrightPlayerFactory :
                                float /*curScore*/) {
         if (getDefaultPlayerType()
                 == STAGEFRIGHT_PLAYER) {
-            char buf[20];
+            union {
+                char buf[20];
+                uint32_t buf32[20/sizeof(uint32_t)];
+            };
             lseek(fd, offset, SEEK_SET);
             read(fd, buf, sizeof(buf));
             lseek(fd, offset, SEEK_SET);
 
-            uint32_t ident = *((uint32_t*)buf);
+            //uint32_t ident = buf32[0];
 
             // Ogg vorbis?
-            if (ident == 0x5367674f) // 'OggS'
+            //if (ident == 0x5367674f) // 'OggS'
+            if (buf32[0] == 0x5367674f) // 'OggS'
                 return 1.0;
         }
 

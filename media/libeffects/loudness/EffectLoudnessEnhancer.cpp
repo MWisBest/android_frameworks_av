@@ -374,16 +374,20 @@ int LE_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
         }
         memcpy(pReplyData, pCmdData, sizeof(effect_param_t) + sizeof(uint32_t));
         effect_param_t *p = (effect_param_t *)pReplyData;
+        union {
+            char *data;
+            uint32_t *data32;
+        };
         p->status = 0;
         *replySize = sizeof(effect_param_t) + sizeof(uint32_t);
         if (p->psize != sizeof(uint32_t)) {
             p->status = -EINVAL;
             break;
         }
-        switch (*(uint32_t *)p->data) {
+        switch (data32[0]) {
         case LOUDNESS_ENHANCER_PARAM_TARGET_GAIN_MB:
             ALOGV("get target gain(mB) = %d", pContext->mTargetGainmB);
-            *((int32_t *)p->data + 1) = pContext->mTargetGainmB;
+            data[1] = pContext->mTargetGainmB;
             p->vsize = sizeof(int32_t);
             *replySize += sizeof(int32_t);
             break;
@@ -399,13 +403,18 @@ int LE_command(effect_handle_t self, uint32_t cmdCode, uint32_t cmdSize,
         }
         *(int32_t *)pReplyData = 0;
         effect_param_t *p = (effect_param_t *)pCmdData;
+        union {
+            char *data;
+            uint32_t *data32;
+        };
+        data = p->data;
         if (p->psize != sizeof(uint32_t) || p->vsize != sizeof(uint32_t)) {
             *(int32_t *)pReplyData = -EINVAL;
             break;
         }
-        switch (*(uint32_t *)p->data) {
+        switch (data32[0]) {
         case LOUDNESS_ENHANCER_PARAM_TARGET_GAIN_MB:
-            pContext->mTargetGainmB = *((int32_t *)p->data + 1);
+            pContext->mTargetGainmB = data[1];
             ALOGV("set target gain(mB) = %d", pContext->mTargetGainmB);
             LE_reset(pContext); // apply parameter update
             break;

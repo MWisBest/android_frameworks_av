@@ -151,16 +151,26 @@ WebmFloat::WebmFloat(uint64_t id, float value)
 }
 
 void WebmFloat::serializePayload(uint8_t *buf) {
-    uint64_t data;
     if (mSize == sizeof(float)) {
-        float f = mValue;
-        data = *reinterpret_cast<const uint32_t*>(&f);
+        union {
+            uint64_t data;
+            float f;
+        };
+        f = mValue;
+        for (int i = mSize - 1; i >= 0; --i) {
+            buf[i] = data & 0xff;
+            data >>= 8;
+        }
     } else {
-        data = *reinterpret_cast<const uint64_t*>(&mValue);
-    }
-    for (int i = mSize - 1; i >= 0; --i) {
-        buf[i] = data & 0xff;
-        data >>= 8;
+        union {
+            uint64_t data;
+            double d;
+        };
+        d = mValue;
+        for (int i = mSize - 1; i >= 0; --i) {
+            buf[i] = data & 0xff;
+            data >>= 8;
+        }
     }
 }
 

@@ -142,8 +142,9 @@ status_t Visualizer::setCaptureSize(uint32_t size)
 
     p->psize = sizeof(uint32_t);
     p->vsize = sizeof(uint32_t);
-    *(int32_t *)p->data = VISUALIZER_PARAM_CAPTURE_SIZE;
-    *((int32_t *)p->data + 1)= size;
+    int32_t const vpcs = VISUALIZER_PARAM_CAPTURE_SIZE;
+    memcpy(&p->data, &vpcs, sizeof(vpcs));
+    memcpy(&p->data+sizeof(int32_t), &size, sizeof(size));
     status_t status = setParameter(p);
 
     ALOGV("setCaptureSize size %d  status %d p->status %d", size, status, p->status);
@@ -171,8 +172,9 @@ status_t Visualizer::setScalingMode(uint32_t mode) {
 
     p->psize = sizeof(uint32_t);
     p->vsize = sizeof(uint32_t);
-    *(int32_t *)p->data = VISUALIZER_PARAM_SCALING_MODE;
-    *((int32_t *)p->data + 1)= mode;
+    int32_t const vpsm = VISUALIZER_PARAM_SCALING_MODE;
+    memcpy(&p->data, &vpsm, sizeof(vpsm));
+    memcpy(&p->data+sizeof(int32_t), &mode, sizeof(mode));
     status_t status = setParameter(p);
 
     ALOGV("setScalingMode mode %d  status %d p->status %d", mode, status, p->status);
@@ -201,8 +203,9 @@ status_t Visualizer::setMeasurementMode(uint32_t mode) {
 
     p->psize = sizeof(uint32_t);
     p->vsize = sizeof(uint32_t);
-    *(int32_t *)p->data = VISUALIZER_PARAM_MEASUREMENT_MODE;
-    *((int32_t *)p->data + 1)= mode;
+    int32_t const vpmm = VISUALIZER_PARAM_MEASUREMENT_MODE;
+    memcpy(&p->data, &vpmm, sizeof(vpmm));
+    memcpy(&p->data+sizeof(vpmm), &mode, sizeof(mode));
     status_t status = setParameter(p);
 
     ALOGV("setMeasurementMode mode %d  status %d p->status %d", mode, status, p->status);
@@ -371,7 +374,8 @@ uint32_t Visualizer::initCaptureSize()
 
     p->psize = sizeof(uint32_t);
     p->vsize = sizeof(uint32_t);
-    *(int32_t *)p->data = VISUALIZER_PARAM_CAPTURE_SIZE;
+    int32_t const vpcs = VISUALIZER_PARAM_CAPTURE_SIZE;
+    memcpy(&p->data, &vpcs, sizeof(vpcs));
     status_t status = getParameter(p);
 
     if (status == NO_ERROR) {
@@ -380,7 +384,7 @@ uint32_t Visualizer::initCaptureSize()
 
     uint32_t size = 0;
     if (status == NO_ERROR) {
-        size = *((int32_t *)p->data + 1);
+        memcpy(&size, &p->data+sizeof(int32_t), sizeof(int32_t));
     }
     mCaptureSize = size;
 
