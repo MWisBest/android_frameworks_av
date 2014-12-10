@@ -28,6 +28,10 @@
 #include <camera/CameraParameters2.h>
 #include <camera/CameraMetadata.h>
 
+#if __cplusplus < 201103L && !defined(constexpr)
+#define constexpr const
+#endif
+
 namespace android {
 namespace camera2 {
 
@@ -187,7 +191,7 @@ struct Parameters {
     static const int MAX_INITIAL_PREVIEW_WIDTH = 1920;
     static const int MAX_INITIAL_PREVIEW_HEIGHT = 1080;
     // Aspect ratio tolerance
-    static const float ASPECT_RATIO_TOLERANCE = 0.001;
+    static constexpr float ASPECT_RATIO_TOLERANCE = 0.001;
 
     // Full static camera info, object owned by someone else, such as
     // Camera2Device.

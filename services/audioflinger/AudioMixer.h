@@ -33,6 +33,10 @@
 // FIXME This is actually unity gain, which might not be max in future, expressed in U.12
 #define MAX_GAIN_INT AudioMixer::UNITY_GAIN_INT
 
+#if __cplusplus < 201103L && !defined(constexpr)
+#define constexpr const
+#endif
+
 namespace android {
 
 // ----------------------------------------------------------------------------
@@ -58,7 +62,7 @@ public:
     static const uint32_t MAX_NUM_CHANNELS_TO_DOWNMIX = AUDIO_CHANNEL_COUNT_MAX;
 
     static const uint16_t UNITY_GAIN_INT = 0x1000;
-    static const float    UNITY_GAIN_FLOAT = 1.0f;
+    static constexpr float    UNITY_GAIN_FLOAT = 1.0f;
 
     enum { // names
 
