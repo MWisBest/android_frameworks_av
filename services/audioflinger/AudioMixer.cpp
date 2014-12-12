@@ -2048,6 +2048,11 @@ void AudioMixer::track__Resample(track_t* t, TO* out, size_t outFrameCount, TO* 
     }
 }
 
+#ifdef __GNUC__
+#pragma GCC push_options
+#pragma GCC optimize ("no-tree-vectorize")
+#warning "WARNING: USING UGLY WORKAROUND FOR GCC ICE"
+#endif
 /* This track hook is called to mix a track, when no resampling is required.
  * The input buffer should be present in t->in.
  *
@@ -2071,6 +2076,9 @@ void AudioMixer::track__NoResample(track_t* t, TO* out, size_t frameCount,
     in += (MIXTYPE == MIXTYPE_MONOEXPAND) ? frameCount : frameCount * t->mMixerChannelCount;
     t->in = in;
 }
+#ifdef __GNUC__
+#pragma GCC pop_options
+#endif
 
 /* The Mixer engine generates either int32_t (Q4_27) or float data.
  * We use this function to convert the engine buffers

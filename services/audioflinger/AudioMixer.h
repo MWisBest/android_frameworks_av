@@ -445,11 +445,7 @@ private:
             TO* temp __unused, TA* aux);
     template <int MIXTYPE, typename TO, typename TI, typename TA>
     static void track__NoResample(track_t* t, TO* out, size_t frameCount,
-            TO* temp __unused, TA* aux)
-#if defined(__GNUC__) && __GNUC__ == 4 && ( __GNUC_MINOR__ == 8 || __GNUC_MINOR__ == 9 )
-    __attribute__((optimize("-fno-tree-vectorize")))
-#endif
-    ;
+            TO* temp __unused, TA* aux);
 
     static void convertMixerFormat(void *out, audio_format_t mixerOutFormat,
             void *in, audio_format_t mixerInFormat, size_t sampleCount);
