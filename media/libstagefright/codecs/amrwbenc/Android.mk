@@ -114,13 +114,6 @@ endif
 
 LOCAL_CFLAGS += -Werror
 
-# Some versions of GCC are incorrectly throwing an array-bounds error here.
-# This issue only manifests itself when using -O3, and in particular, the
-# -ftree-vectorize flag. So, unless we know our compiler isn't insane, disable it.
-ifneq ($(DEBUG_COMPILER_IS_LESS_STUPID),true)
-	LOCAL_CFLAGS += -fno-tree-vectorize
-endif
-
 include $(BUILD_STATIC_LIBRARY)
 
 ################################################################################
