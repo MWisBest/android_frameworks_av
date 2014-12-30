@@ -6,10 +6,6 @@ LOCAL_SRC_FILES := \
 
 LOCAL_CFLAGS += -Werror
 
-ifneq ($(TI_CUSTOM_DOMX_PATH),)
-LOCAL_C_INCLUDES += $(TI_CUSTOM_DOMX_PATH)/omx_core/inc
-endif
-
 LOCAL_MODULE := libstagefright_id3
 
 include $(BUILD_STATIC_LIBRARY)

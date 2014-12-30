@@ -48,10 +48,6 @@
 #include <OMX_Component.h>
 #include <OMX_IndexExt.h>
 
-#ifdef USE_TI_CUSTOM_DOMX
-#include <OMX_TI_IVCommon.h>
-#endif
-
 #include "include/avc_utils.h"
 
 namespace android {
