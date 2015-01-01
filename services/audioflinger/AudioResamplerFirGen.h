@@ -17,10 +17,6 @@
 #ifndef ANDROID_AUDIO_RESAMPLER_FIR_GEN_H
 #define ANDROID_AUDIO_RESAMPLER_FIR_GEN_H
 
-#if __cplusplus < 201103L && !defined(constexpr)
-#define constexpr const
-#endif
-
 namespace android {
 
 /*
@@ -191,22 +187,22 @@ static inline int64_t toint(double x, int64_t maxval) {
 
 template <int N>
 struct I0Term {
-    static constexpr double value = I0Term<N-1>::value / (4. * N * N);
+    static const double value = I0Term<N-1>::value / (4. * N * N);
 };
 
 template <>
 struct I0Term<0> {
-    static constexpr double value = 1.;
+    static const double value = 1.;
 };
 
 template <int N>
 struct I0ATerm {
-    static constexpr double value = I0ATerm<N-1>::value * (2.*N-1.) * (2.*N-1.) / (8. * N);
+    static const double value = I0ATerm<N-1>::value * (2.*N-1.) * (2.*N-1.) / (8. * N);
 };
 
 template <>
 struct I0ATerm<0> { // 1/sqrt(2*PI);
-    static constexpr double value = 0.398942280401432677939946059934381868475858631164934657665925;
+    static const double value = 0.398942280401432677939946059934381868475858631164934657665925;
 };
 
 #if USE_HORNERS_METHOD

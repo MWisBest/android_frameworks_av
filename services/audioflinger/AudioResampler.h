@@ -24,10 +24,6 @@
 #include <media/AudioBufferProvider.h>
 #include <system/audio.h>
 
-#if __cplusplus < 201103L && !defined(constexpr)
-#define constexpr const
-#endif
-
 namespace android {
 // ----------------------------------------------------------------------------
 
@@ -54,7 +50,7 @@ public:
 #endif
     };
 
-    static constexpr float UNITY_GAIN_FLOAT = 1.0f;
+    static const float UNITY_GAIN_FLOAT = 1.0f;
 
     static AudioResampler* create(audio_format_t format, int inChannelCount,
             int32_t sampleRate, src_quality quality=DEFAULT_QUALITY);
