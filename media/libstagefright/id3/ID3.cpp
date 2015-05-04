@@ -480,7 +480,7 @@ void ID3::Iterator::getString(String8 *id, String8 *comment) const {
 // comment fields (COM/COMM) contain an initial short descriptor, followed by \0,
 // followed by more data. The data following the \0 can be retrieved by setting
 // "otherdata" to true.
-void ID3::Iterator::getstring(String8 *id, bool otherdata) const {
+void __attribute__((optimize("no-tree-vectorize"))) ID3::Iterator::getstring(String8 *id, bool otherdata) const {
     id->setTo("");
 
     const uint8_t *frameData = mFrameData;
@@ -570,6 +570,7 @@ void ID3::Iterator::getstring(String8 *id, bool otherdata) const {
                 break;
             }
         }
+
         if (eightBit) {
             // collapse to 8 bit, then let the media scanner client figure out the real encoding
             char *frame8 = new char[len];
@@ -630,6 +631,8 @@ void ID3::Iterator::findFrame() {
                 | (mParent.mData[mOffset + 4] << 8)
                 | mParent.mData[mOffset + 5];
 
+            if( mFrameSize == 0 ) return;
+
             mFrameSize += 6;
 
             if (mOffset + mFrameSize > mParent.mSize) {
@@ -670,6 +673,8 @@ void ID3::Iterator::findFrame() {
             } else {
                 baseSize = U32_AT(&mParent.mData[mOffset + 4]);
             }
+
+            if( baseSize == 0 ) return;
 
             mFrameSize = 10 + baseSize;
 
